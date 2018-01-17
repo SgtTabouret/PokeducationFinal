@@ -47,8 +47,8 @@ double facteurLv = 1;
     }
     
   void testChoixAttaque () {
-    assertEquals("Charge",choixAttaque(1,attaquesDispo));
-    assertEquals("Griffe",choixAttaque(3,attaquesDispo));
+    assertEquals("Charge (Histoire)",choixAttaque(1,attaquesDispo));
+    assertEquals("Griffe (Culture)",choixAttaque(3,attaquesDispo));
   }
   String choixAttaque(int choix,String[] attaquesDispo) {
     //demqnde au joueur de choisir un attaque en controlant la saisie
