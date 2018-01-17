@@ -3,4 +3,5 @@ class Pokemon {
   int PV;
   int PATK;
   String TypePoke;
+  int niveau;
 }
