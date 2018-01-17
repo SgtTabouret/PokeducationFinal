@@ -2,7 +2,7 @@ import extensions.CSVFile;
 class combat extends Program{
 //RAJOUTER FONCTION TEST POUR VERIFIER QUE LES REPONSES PROPOSES CONTIENNENT UNE BONNE
 String[] attaquesDispo = new String[] {"Charge (Histoire)","Morsure (Maths)","Griffe (Culture)","Tranche (Francais)"};
-String cheminCSV = "C:\\Users\\Flann\\Documents\\NetBeansProjects\\Pokeducation\\src\\Pokeducation\\";
+String cheminCSV = "C:\\Users\\jules\\Desktop\\Pokeducation\\src\\pokeducation\\PokeducationFinal\\";
 double facteurLv = 1;
 
     String[][] csvToTab (CSVFile fichier){
@@ -20,10 +20,9 @@ double facteurLv = 1;
     }
     
     String[][] conversionCsvQtoTabQ(String typeAttaque){
-        String[][]tabQ=new String [50][50];
         String nomCSV = "Q"+typeAttaque+".csv";
         CSVFile questions = loadCSV(cheminCSV + nomCSV);
-        tabQ=csvToTab(questions);
+        String[][] tabQ=csvToTab(questions);
         return tabQ;
     }
     void testRecupererTypeAttaque(){
@@ -47,13 +46,19 @@ double facteurLv = 1;
     }
     
   void testChoixAttaque () {
-    assertEquals("Charge (Histoire)",choixAttaque(1,attaquesDispo));
-    assertEquals("Griffe (Culture)",choixAttaque(3,attaquesDispo));
+    assertEquals("Charge (Histoire)",choixAttaque("1",attaquesDispo));
+    assertEquals("Griffe (Culture)",choixAttaque("3",attaquesDispo));
   }
-  String choixAttaque(int choix,String[] attaquesDispo) {
+  String choixAttaque(String choix,String[] attaquesDispo) {
     //demqnde au joueur de choisir un attaque en controlant la saisie
-    choix = choix - 1;
-    String attaqueChoisie = attaquesDispo[choix];
+    while(!choix.equals("1") && !choix.equals("2") && !choix.equals("3") && !choix.equals("4")){
+    println("Mettre un chiffre compris entre 1 et 4");
+      delay(2000);
+      choix = readString();
+    }
+    int choixInt=stringToInt(choix);
+    choixInt = choixInt - 1;
+    String attaqueChoisie = attaquesDispo[choixInt];
 
     //CONTROLE SAISIE A AJOUTER
 
@@ -72,14 +77,18 @@ double facteurLv = 1;
   boolean reussiteAttaque(String Attaque){
       //calcul la reussite de lattaque en fonction de la bonne ou mauvaise reponse du joueur
       boolean reussite = false;
-      println("check1");
       String typeAttaque=recupererTypeAttaque(Attaque);
-      println("check2");
       String[][] tabQ =conversionCsvQtoTabQ(typeAttaque);
       int nQuestion = (int) (random()*length(tabQ,1));
       println(tabQ[nQuestion][0] + "\n");
       affichageRep(tabQ, nQuestion);
-      int nRepChoisie= readInt();
+      String nRepChoisieString= readString();
+      while(!nRepChoisieString.equals("1") && !nRepChoisieString.equals("2") && !nRepChoisieString.equals("3") && !nRepChoisieString.equals("4")){
+    println("Mettre un chiffre compris entre 1 et 4");
+      delay(2000);
+      nRepChoisieString = readString();
+    }
+    int nRepChoisie=stringToInt(nRepChoisieString);
       if (tabQ[nQuestion][nRepChoisie].equals(tabQ[nQuestion][5])){
           reussite=true;
       }
@@ -158,7 +167,7 @@ double facteurLv = 1;
         //attaque de l'utilisateur
 
 
-        String attaqueLancee = choixAttaque(readInt(),attaquesDispo);
+        String attaqueLancee = choixAttaque(readString(),attaquesDispo);
         clearScreen();
         cursor(16,4);
         println(pokemonJoueur.Nom + " attaque " + attaqueLancee + "!");
