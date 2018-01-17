@@ -2,7 +2,7 @@ import extensions.CSVFile;
 class combat extends Program{
 //RAJOUTER FONCTION TEST POUR VERIFIER QUE LES REPONSES PROPOSES CONTIENNENT UNE BONNE
 String[] attaquesDispo = new String[] {"Charge (Histoire)","Morsure (Maths)","Griffe (Culture)","Tranche (Francais)"};
-String cheminCSV = "C:\\Users\\jules\\Desktop\\Pokeducation\\src\\pokeducation\\PokeducationFinal\\";
+String cheminCSV = "C:\\Users\\Flann\\Desktop\\Pokeducation\\src\\pokeducation\\PokeducationFinal\\";
 double facteurLv = 1;
 
     String[][] csvToTab (CSVFile fichier){
