@@ -127,8 +127,7 @@ class Pokeducation extends Program{
 
         pokemonJoueur=nouveaupokemon(pokemonJoueur,lesPokemons);
       
-    }
-    else{
+    }else{
         pokemonJoueur.Nom      = laSauvegarde [sauvegardeChoisie][2];
         pokemonJoueur.PV       = stringToInt(laSauvegarde [sauvegardeChoisie][3]);
         pokemonJoueur.PATK     = stringToInt(laSauvegarde [sauvegardeChoisie][4]);
@@ -140,24 +139,22 @@ class Pokeducation extends Program{
     SauvegardePVJoueur=pokemonJoueur.PV;
     while(findecombat==false){
         String[] attaquesDispo = new String[] {laSauvegarde[sauvegardeChoisie][7],laSauvegarde[sauvegardeChoisie][8],laSauvegarde[sauvegardeChoisie][9],laSauvegarde[sauvegardeChoisie][10]};
-    //apparition pokemon random
+        //apparition pokemon random
         Pokemon pokemonApparu=debutcombat(lesPokemons,pokemonJoueur);
 
 
-    //debut combat
+        //debut combat
         while (pokemonApparu.PV > 0 && pokemonJoueur.PV > 0){
            
             phraseAttaque(idxTour, pokemonJoueur.Nom, pokemonApparu.Nom);
 
-        //attaque de l'utilisateur
-          int degats=attaqueutilisateur(attaquesDispo,pokemonJoueur,pokemonApparu);
-            
-      
-        // perte de PVs
-                pokemonApparu.PV = (int) (pokemonApparu.PV-degats);
+            //attaque de l'utilisateur
+            int degats=attaqueUtilisateur(attaquesDispo,pokemonJoueur,pokemonApparu);
+            // perte de PVs
+            pokemonApparu.PV = (int) (pokemonApparu.PV-degats);
                
-        //riposte de l'ennemi
-                 joueurGagne=riposte(pokemonApparu,pokemonJoueur);
+            //riposte de l'ennemi
+             joueurGagne=riposte(pokemonApparu,pokemonJoueur);
         //fin combat quand l'ennemi ou le joueur n'a plus de PV
         //gain d'exp
                
@@ -237,20 +234,25 @@ class Pokeducation extends Program{
                         
   }
   boolean riposte(Pokemon pokemonApparu,Pokemon pokemonJoueur){
+      //le Quipokemon ennemi attaque si il a encore de la vie (10% de chance qu'il rate son attaque
       if(pokemonApparu.PV > 0 && random()<0.9 ){
-                    pokemonJoueur.PV=pokemonJoueur.PV-pokemonApparu.PATK;
-                    println(pokemonApparu.Nom + " a reussi son attaque");
-                    println("Il reste "+pokemonJoueur.PV+" PV a ton pokemon");
-                }
-                else{
-                    println(pokemonApparu.Nom +" a loupe son attaque");
-                }
-                if(pokemonJoueur.PV<=0){
-                   return false;
-                }
+            pokemonJoueur.PV=pokemonJoueur.PV-pokemonApparu.PATK;
+            println(pokemonApparu.Nom + " a reussi son attaque");
+            println("Il reste "+pokemonJoueur.PV+" PV a ton pokemon");
+            //si apres l'attaque de l'ennemi tue le Quipokemon du joueur le booleen joueurGagne passe a false, la partie est perdue
+            if(pokemonJoueur.PV<=0){
+                return false;
+            } else {
                 return true;
+            }
+      }else{
+            println(pokemonApparu.Nom +" a loupe son attaque");
+            return true;
+      }
+
+
   }
-   int attaqueutilisateur(String[] attaquesDispo,Pokemon pokemonJoueur,Pokemon pokemonApparu){
+   int attaqueUtilisateur(String[] attaquesDispo,Pokemon pokemonJoueur,Pokemon pokemonApparu){
             println("1. "+ attaquesDispo[0] + "\n" + "2. " + attaquesDispo[1] + "\n"+ "3. " +attaquesDispo[2] + "\n" + "4. " +attaquesDispo[3]);
             String attaqueLancee = choixAttaque(readString(),attaquesDispo);
             clearScreen();
