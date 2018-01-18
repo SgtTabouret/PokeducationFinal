@@ -1,9 +1,8 @@
 import extensions.CSVFile;
 class combat extends Program{
 //RAJOUTER FONCTION TEST POUR VERIFIER QUE LES REPONSES PROPOSES CONTIENNENT UNE BONNE
-String[] attaquesDispo = new String[] {"Charge (Histoire)","Morsure (Maths)","Griffe (Culture)","Tranche (Francais)"};
-String cheminCSV = "C:\\Users\\Flann\\Desktop\\Pokeducation\\src\\pokeducation\\PokeducationFinal\\";
-double facteurLv = 1;
+String cheminCSV = "C:\\Users\\jules\\Desktop\\Pokeducation\\src\\pokeducation\\PokeducationFinal\\";
+
 
     String[][] csvToTab (CSVFile fichier){
 
@@ -46,11 +45,15 @@ double facteurLv = 1;
     }
     
   void testChoixAttaque () {
-    assertEquals("Charge (Histoire)",choixAttaque("1",attaquesDispo));
-    assertEquals("Griffe (Culture)",choixAttaque("3",attaquesDispo));
+      String[] attaques = new String[] {"Charge (Histoire)","Morsure (Maths)","Griffe (Culture)","Tranche (Francais)"};
+
+    assertEquals("Charge (Histoire)",choixAttaque("1",attaques));
+    assertEquals("Griffe (Culture)",choixAttaque("3",attaques));
   }
   String choixAttaque(String choix,String[] attaquesDispo) {
+          
     //demqnde au joueur de choisir un attaque en controlant la saisie
+    
     while(!choix.equals("1") && !choix.equals("2") && !choix.equals("3") && !choix.equals("4")){
     println("Mettre un chiffre compris entre 1 et 4");
       delay(2000);
@@ -116,16 +119,16 @@ double facteurLv = 1;
           }
   }
 
-  Pokemon apparitionPokemon (String[][] tableau, double facteurLvl){
+  Pokemon apparitionPokemon (String[][] tableau, int niveau){
 
       int randomNb = 0;
-    while(randomNb == 0){
+    while(randomNb <3){
         randomNb=(int) (random()*length(tableau,2));
     }
     Pokemon pokemonApparaissant = new Pokemon();
     pokemonApparaissant.Nom      = tableau [0][randomNb];
-    pokemonApparaissant.PV       = (int) (5 * facteurLvl) ;
-    pokemonApparaissant.PATK     = (int) (1 * facteurLvl) ;
+    pokemonApparaissant.PV       = (int) (5 + niveau*0.5) ;
+    pokemonApparaissant.PATK     = (int) (2 + niveau*0.5) ;
     pokemonApparaissant.TypePoke = tableau [1][randomNb];
     return pokemonApparaissant;
     }
@@ -140,21 +143,47 @@ double facteurLv = 1;
   }
 
 
-  void algorithm(){
+  void DebutDeJeu(){
     //definition variables
     CSVFile pokemons = loadCSV(cheminCSV + "pokemons.csv"); //MODIFIER PLUS TARD
     String[][]  lesPokemons =  csvToTab(pokemons);
- 
-
+    CSVFile sauvegarde = loadCSV(cheminCSV + "Sauvegarde.csv");
+    String[][] laSauvegarde = csvToTab(sauvegarde);
+    int sauvegardeChoisie=1;
+    int idxTour=stringToInt(laSauvegarde[sauvegardeChoisie][1]);
+    int xp=0;
+    int palierxp= stringToInt(laSauvegarde[sauvegardeChoisie][12]);
     Pokemon pokemonJoueur = new Pokemon();
-    pokemonJoueur.Nom      = lesPokemons [0][0];
+    if (idxTour==0){ //permettra au joueur de commencer avec le pokémon de son choix si il s'agit de son premier tour
+        println("Choisi ton pokémon");
+        for (int cpt = 0 ; cpt< 3; cpt++){ 
+         println(cpt+1 + ". " + lesPokemons[0][cpt] + " " + "(" + lesPokemons[1][cpt]+")");
+        }
+    String choixPoke=readString();
+    while(!choixPoke.equals("1") && !choixPoke.equals("2") && !choixPoke.equals("3")){
+    println("Mettre un chiffre compris entre 1 et 3");
+      delay(2000);
+      choixPoke = readString();
+    }
+    int choixIntPoke=stringToInt(choixPoke)-1;
+    pokemonJoueur.Nom      = lesPokemons [0][choixIntPoke];
     pokemonJoueur.PV       = 10;
     pokemonJoueur.PATK     = 2;
-    pokemonJoueur.TypePoke = lesPokemons [1][0];
-    int idxTour=0;
-
+    pokemonJoueur.TypePoke = lesPokemons [1][choixIntPoke];
+    pokemonJoueur.niveau = 1;
+    }
+    else{
+    pokemonJoueur.Nom      = laSauvegarde [sauvegardeChoisie][2];
+    pokemonJoueur.PV       = stringToInt(laSauvegarde [sauvegardeChoisie][3]);
+    pokemonJoueur.PATK     = stringToInt(laSauvegarde [sauvegardeChoisie][4]);
+    pokemonJoueur.TypePoke = laSauvegarde [sauvegardeChoisie][5];
+    pokemonJoueur.niveau = stringToInt(laSauvegarde[sauvegardeChoisie][6]);
+    xp=stringToInt(laSauvegarde[sauvegardeChoisie][11]);
+    
+    }
+    String[] attaquesDispo = new String[] {laSauvegarde[sauvegardeChoisie][7],laSauvegarde[sauvegardeChoisie][8],laSauvegarde[sauvegardeChoisie][9],laSauvegarde[sauvegardeChoisie][10]};
     //apparition pokemon random
-    Pokemon pokemonApparu = apparitionPokemon(lesPokemons, facteurLv);
+    Pokemon pokemonApparu = apparitionPokemon(lesPokemons, pokemonJoueur.niveau);
     clearScreen();
     println("Un " + pokemonApparu.Nom + " est apparu !");
 
@@ -166,7 +195,7 @@ double facteurLv = 1;
 
         //attaque de l'utilisateur
 
-
+        println("1. "+ attaquesDispo[0] + "\n" + "2. " + attaquesDispo[1] + "\n"+ "3. " +attaquesDispo[2] + "\n" + "4. " +attaquesDispo[3]);
         String attaqueLancee = choixAttaque(readString(),attaquesDispo);
         clearScreen();
         cursor(16,4);
@@ -179,11 +208,22 @@ double facteurLv = 1;
         pokemonApparu.PV = (int) (pokemonApparu.PV-degats);
         
         //riposte de l'ennemi
+        if(pokemonApparu.PV > 0){
         
+        }
         //fin combat quand l'ennemi ou le joueur n'a plus de PV
         //gain d'exp
-        idxTour=idxTour+1;
+       
     }
-    facteurLv = facteurLv + 0.2;
+    //idxTour=idxTour+1;
+    xp = xp + 200;
+    if(xp==1000){
+        pokemonJoueur.niveau=pokemonJoueur.niveau+1;
+        println("Bravo ton pokemon est monté d'un niveau");
+    }
+    DebutDeJeu();
+  }
+  void algorithm(){
+      DebutDeJeu();
   }
 }
