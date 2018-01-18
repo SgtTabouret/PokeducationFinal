@@ -29,15 +29,15 @@ double facteurLv = 1;
         assertEquals("Francais", recupererTypeAttaque("Tranche (Francais)"));
         assertEquals("Toto", recupererTypeAttaque("TuTu (Toto)"));
     }
-    String recupererTypeAttaque(String Attaque) {
+    String recupererTypeAttaque(String attaque) {
         String typeAttaque="";
         int i=0;
-        while (!")".equals(substring(Attaque,i,i+1))){
+        while (!")".equals(substring(attaque,i,i+1))){
             i=i+1;
-            if ("(".equals(substring(Attaque,i,i+1))){
+            if ("(".equals(substring(attaque,i,i+1))){
                 i=i+1;
-                while (!")".equals(substring(Attaque,i,i+1))){
-                    typeAttaque=typeAttaque+substring(Attaque,i,i+1);
+                while (!")".equals(substring(attaque,i,i+1))){
+                    typeAttaque=typeAttaque+substring(attaque,i,i+1);
                     i=i+1;
                 }
             }
@@ -65,19 +65,19 @@ double facteurLv = 1;
     return attaqueChoisie;
   }
 
-  int calculDegats(String Attaque, Pokemon pokeEnnemi, Pokemon pokeJoueur){
+  int calculDegats(String attaque, Pokemon pokeEnnemi, Pokemon pokeJoueur){
     //calcul les degats infliges en fonction de la reussite de l'attaque
       int degats;
       boolean reussite;
-      reussite = reussiteAttaque (Attaque);
+      reussite = reussiteAttaque (attaque);
       degats = assignationDegats(reussite, pokeJoueur.PATK, pokeJoueur.Nom, pokeEnnemi.Nom, pokeJoueur.TypePoke);
       return degats;
   }
 
-  boolean reussiteAttaque(String Attaque){
+  boolean reussiteAttaque(String attaque){
       //calcul la reussite de lattaque en fonction de la bonne ou mauvaise reponse du joueur
       boolean reussite = false;
-      String typeAttaque=recupererTypeAttaque(Attaque);
+      String typeAttaque=recupererTypeAttaque(attaque);
       String[][] tabQ =conversionCsvQtoTabQ(typeAttaque);
       int nQuestion = (int) (random()*length(tabQ,1));
       println(tabQ[nQuestion][0] + "\n");
@@ -146,11 +146,12 @@ double facteurLv = 1;
     String[][]  lesPokemons =  csvToTab(pokemons);
  
 
-    Pokemon pokemonJoueur = new Pokemon();
+    Pokemon pokemonJoueur = new Pokemon(); //a mettre dans le fichier sauvegarde
     pokemonJoueur.Nom      = lesPokemons [0][0];
     pokemonJoueur.PV       = 10;
     pokemonJoueur.PATK     = 2;
     pokemonJoueur.TypePoke = lesPokemons [1][0];
+    // pokemonJoueur.niveau = niv Sauvegarde ds le fichier csv
     int idxTour=0;
 
     //apparition pokemon random
