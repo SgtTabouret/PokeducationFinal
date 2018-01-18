@@ -105,10 +105,10 @@ String cheminCSV = "C:\\Users\\jules\\Desktop\\Pokeducation\\src\\pokeducation\\
      int degats;
      if (reussite == true){
          degats = PATK+1;
-         println("Bien jouÃ© ! " + pokeJoueur + " a frappÃ© " + pokeEnnemi + " de plein fouet ! ");
+         println("Bien joue ! " + pokeJoueur + " a frappe " + pokeEnnemi + " de plein fouet ! ");
      } else {
          degats = (int) (PATK*0.5);
-         println("Mince ! " + pokeJoueur + " n'a pas lancÃ© sa meilleure attaque !");
+         println("Mince ! " + pokeJoueur + " n'a pas lance sa meilleure attaque !");
      }
      return degats;
   }
@@ -127,8 +127,8 @@ String cheminCSV = "C:\\Users\\jules\\Desktop\\Pokeducation\\src\\pokeducation\\
     }
     Pokemon pokemonApparaissant = new Pokemon();
     pokemonApparaissant.Nom      = tableau [0][randomNb];
-    pokemonApparaissant.PV       = (int) (5 + niveau*0.5) ;
-    pokemonApparaissant.PATK     = (int) (2 + niveau*0.5) ;
+    pokemonApparaissant.PV       = (int) (5 + niveau*3) ;
+    pokemonApparaissant.PATK     = (int) (2 + niveau) ;
     pokemonApparaissant.TypePoke = tableau [1][randomNb];
     return pokemonApparaissant;
     }
@@ -151,37 +151,40 @@ String cheminCSV = "C:\\Users\\jules\\Desktop\\Pokeducation\\src\\pokeducation\\
     String[][] laSauvegarde = csvToTab(sauvegarde);
     int sauvegardeChoisie=1;
     int idxTour=stringToInt(laSauvegarde[sauvegardeChoisie][1]);
-    int xp=0;
+    int xp=stringToInt(laSauvegarde[sauvegardeChoisie][11]);
     int palierxp= stringToInt(laSauvegarde[sauvegardeChoisie][12]);
     boolean findecombat=false;
+    boolean joueurGagne=true;
+    int SauvegardePVJoueur;
     Pokemon pokemonJoueur = new Pokemon();
-    if (idxTour==0){ //permettra au joueur de commencer avec le pokÃ©mon de son choix si il s'agit de son premier tour
+    if (idxTour==0){ //permettra au joueur de commencer avec le pokemon de son choix si il s'agit de son premier tour
         println("Choisi ton pokemon");
         for (int cpt = 0 ; cpt< 3; cpt++){ 
-         println(cpt+1 + ". " + lesPokemons[0][cpt] + " " + "(" + lesPokemons[1][cpt]+")");
+            println(cpt+1 + ". " + lesPokemons[0][cpt] + " " + "(" + lesPokemons[1][cpt]+")");
         }
-    String choixPoke=readString();
-    while(!choixPoke.equals("1") && !choixPoke.equals("2") && !choixPoke.equals("3")){
-    println("Mettre un chiffre compris entre 1 et 3");
-      delay(2000);
-      choixPoke = readString();
-    }
-    int choixIntPoke=stringToInt(choixPoke)-1;
-    pokemonJoueur.Nom      = lesPokemons [0][choixIntPoke];
-    pokemonJoueur.PV       = 10;
-    pokemonJoueur.PATK     = 2;
-    pokemonJoueur.TypePoke = lesPokemons [1][choixIntPoke];
-    pokemonJoueur.niveau = 1;
+        String choixPoke=readString();
+        while(!choixPoke.equals("1") && !choixPoke.equals("2") && !choixPoke.equals("3")){
+            println("Mettre un chiffre compris entre 1 et 3");
+            delay(2000);
+            choixPoke = readString();
+        }
+        int choixIntPoke=stringToInt(choixPoke)-1;
+        pokemonJoueur.Nom      = lesPokemons [0][choixIntPoke];
+        pokemonJoueur.PV       = 10;
+        pokemonJoueur.PATK     = 2;
+        pokemonJoueur.TypePoke = lesPokemons [1][choixIntPoke];
+        pokemonJoueur.niveau = 1;
     }
     else{
-    pokemonJoueur.Nom      = laSauvegarde [sauvegardeChoisie][2];
-    pokemonJoueur.PV       = stringToInt(laSauvegarde [sauvegardeChoisie][3]);
-    pokemonJoueur.PATK     = stringToInt(laSauvegarde [sauvegardeChoisie][4]);
-    pokemonJoueur.TypePoke = laSauvegarde [sauvegardeChoisie][5];
-    pokemonJoueur.niveau = stringToInt(laSauvegarde[sauvegardeChoisie][6]);
-    xp=stringToInt(laSauvegarde[sauvegardeChoisie][11]);
+        pokemonJoueur.Nom      = laSauvegarde [sauvegardeChoisie][2];
+        pokemonJoueur.PV       = stringToInt(laSauvegarde [sauvegardeChoisie][3]);
+        pokemonJoueur.PATK     = stringToInt(laSauvegarde [sauvegardeChoisie][4]);
+        pokemonJoueur.TypePoke = laSauvegarde [sauvegardeChoisie][5];
+        pokemonJoueur.niveau = stringToInt(laSauvegarde[sauvegardeChoisie][6]);
+        xp=stringToInt(laSauvegarde[sauvegardeChoisie][11]);
     
     }
+    SauvegardePVJoueur=pokemonJoueur.PV;
     while(findecombat==false){
         String[] attaquesDispo = new String[] {laSauvegarde[sauvegardeChoisie][7],laSauvegarde[sauvegardeChoisie][8],laSauvegarde[sauvegardeChoisie][9],laSauvegarde[sauvegardeChoisie][10]};
     //apparition pokemon random
@@ -208,23 +211,62 @@ String cheminCSV = "C:\\Users\\jules\\Desktop\\Pokeducation\\src\\pokeducation\\
 
         // perte de PVs
                 pokemonApparu.PV = (int) (pokemonApparu.PV-degats);
-                println("check3");
+               
         //riposte de l'ennemi
-                if(pokemonApparu.PV > 0){
-        println("check4");
+                if(pokemonApparu.PV > 0 && random()<0.9 ){
+                    pokemonJoueur.PV=pokemonJoueur.PV-pokemonApparu.PATK;
+                    println(pokemonApparu.Nom + " a reussi son attaque");
+                    println("Il reste "+pokemonJoueur.PV+" PV a ton pokemon");
+                }
+                else{
+                    println(pokemonApparu.Nom +" a loupe son attaque");
+                }
+                if(pokemonJoueur.PV<=0){
+                    joueurGagne=false;
                 }
         //fin combat quand l'ennemi ou le joueur n'a plus de PV
         //gain d'exp
-                println("check1");
+               
             }
-    //idxTour=idxTour+1;
-            println("check2");
-            xp = xp + 200;
-            if(xp==1000){
-                pokemonJoueur.niveau=pokemonJoueur.niveau+1;
-                println("Bravo ton pokemon est montÃ© d'un niveau");
+            pokemonJoueur.PV=SauvegardePVJoueur;
+            if(joueurGagne==true){
+                println("Bravo tu as vaincu "+pokemonApparu.Nom);
+                xp = xp + 200;
+                if(xp==palierxp){//opti possible
+                    pokemonJoueur.niveau=pokemonJoueur.niveau+1;
+                    println("Bravo ton pokemon est monte d'un niveau");
+                    pokemonJoueur.PV=pokemonJoueur.PV+2;
+                    pokemonJoueur.PATK=(int)(pokemonJoueur.PATK+ pokemonJoueur.niveau*1.5);
+                    palierxp=palierxp+50;
+                    if(pokemonJoueur.niveau==5){
+                        println("Ton pokemon peut apprendre l'attaque Pistolet(Technologie) \n veut tu lui apprendre?\n oui \n non");
+                        String nouvelleattaque=readString();
+                        while(!nouvelleattaque.equals("oui") && !nouvelleattaque.equals("non")){
+                            println("Mettre oui ou non");
+                            delay(2000);
+                            nouvelleattaque= readString();
+                        }
+                        if(nouvelleattaque.equals("oui")){
+                            println("Que voulez vous remplacez? \n 1. "+ attaquesDispo[0] + "\n" + "2. " + attaquesDispo[1] + "\n"+ "3. " +attaquesDispo[2] + "\n" + "4. " +attaquesDispo[3]);
+                            String attaquechoisi=readString();
+                            while(!attaquechoisi.equals("1") && !attaquechoisi.equals("2") && !attaquechoisi.equals("3") && !attaquechoisi.equals("4")){
+                                println("Mettre un chiffre compris entre 1 et 4");
+                                delay(2000);
+                                attaquechoisi = readString();
+                            }
+                            int choixattaque=stringToInt(attaquechoisi);
+                            choixattaque = choixattaque - 1;
+                            attaquesDispo[choixattaque]="Pistolet (Technologie";
+                        }
+                    }
+                }
+                idxTour=idxTour+1;
             }
-            println("Voulez vous continuez? \n 1. oui \n 2. non");
+            else{
+                println("Bien tentez, retente ta chance");
+            }
+            joueurGagne=true;
+            println("Voulez vous continuez? \n oui \n non");
             String continuer=readString();
             while(!continuer.equals("oui") && !continuer.equals("non")){
             println("Mettre oui ou non");
@@ -233,6 +275,20 @@ String cheminCSV = "C:\\Users\\jules\\Desktop\\Pokeducation\\src\\pokeducation\\
             }
             if(continuer.equals("non")){
                 findecombat=true;
+                laSauvegarde[sauvegardeChoisie][1]=""+idxTour;
+                laSauvegarde[sauvegardeChoisie][2]=pokemonJoueur.Nom;
+                laSauvegarde[sauvegardeChoisie][3]=""+pokemonJoueur.PV;
+                laSauvegarde[sauvegardeChoisie][4]=""+pokemonJoueur.PATK;
+                laSauvegarde[sauvegardeChoisie][5]=pokemonJoueur.TypePoke;
+                laSauvegarde[sauvegardeChoisie][6]=""+pokemonJoueur.niveau;
+                laSauvegarde[sauvegardeChoisie][7]=attaquesDispo[0];
+                laSauvegarde[sauvegardeChoisie][8]=attaquesDispo[1];
+                laSauvegarde[sauvegardeChoisie][9]=attaquesDispo[2];
+                laSauvegarde[sauvegardeChoisie][10]=attaquesDispo[3];
+                laSauvegarde[sauvegardeChoisie][11]=""+xp;
+                laSauvegarde[sauvegardeChoisie][12]=""+palierxp;
+                saveCSV(laSauvegarde,cheminCSV+"Sauvegarde.csv");
+                
             }
         }
     
