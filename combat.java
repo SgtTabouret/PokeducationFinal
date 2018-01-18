@@ -105,10 +105,10 @@ String cheminCSV = "C:\\Users\\jules\\Desktop\\Pokeducation\\src\\pokeducation\\
      int degats;
      if (reussite == true){
          degats = PATK+1;
-         println("Bien joué ! " + pokeJoueur + " a frappé " + pokeEnnemi + " de plein fouet ! ");
+         println("Bien jouÃ© ! " + pokeJoueur + " a frappÃ© " + pokeEnnemi + " de plein fouet ! ");
      } else {
          degats = (int) (PATK*0.5);
-         println("Mince ! " + pokeJoueur + " n'a pas lancé sa meilleure attaque !");
+         println("Mince ! " + pokeJoueur + " n'a pas lancÃ© sa meilleure attaque !");
      }
      return degats;
   }
@@ -153,9 +153,10 @@ String cheminCSV = "C:\\Users\\jules\\Desktop\\Pokeducation\\src\\pokeducation\\
     int idxTour=stringToInt(laSauvegarde[sauvegardeChoisie][1]);
     int xp=0;
     int palierxp= stringToInt(laSauvegarde[sauvegardeChoisie][12]);
+    boolean findecombat=false;
     Pokemon pokemonJoueur = new Pokemon();
-    if (idxTour==0){ //permettra au joueur de commencer avec le pokémon de son choix si il s'agit de son premier tour
-        println("Choisi ton pokémon");
+    if (idxTour==0){ //permettra au joueur de commencer avec le pokÃ©mon de son choix si il s'agit de son premier tour
+        println("Choisi ton pokemon");
         for (int cpt = 0 ; cpt< 3; cpt++){ 
          println(cpt+1 + ". " + lesPokemons[0][cpt] + " " + "(" + lesPokemons[1][cpt]+")");
         }
@@ -181,47 +182,60 @@ String cheminCSV = "C:\\Users\\jules\\Desktop\\Pokeducation\\src\\pokeducation\\
     xp=stringToInt(laSauvegarde[sauvegardeChoisie][11]);
     
     }
-    String[] attaquesDispo = new String[] {laSauvegarde[sauvegardeChoisie][7],laSauvegarde[sauvegardeChoisie][8],laSauvegarde[sauvegardeChoisie][9],laSauvegarde[sauvegardeChoisie][10]};
+    while(findecombat==false){
+        String[] attaquesDispo = new String[] {laSauvegarde[sauvegardeChoisie][7],laSauvegarde[sauvegardeChoisie][8],laSauvegarde[sauvegardeChoisie][9],laSauvegarde[sauvegardeChoisie][10]};
     //apparition pokemon random
-    Pokemon pokemonApparu = apparitionPokemon(lesPokemons, pokemonJoueur.niveau);
-    clearScreen();
-    println("Un " + pokemonApparu.Nom + " est apparu !");
+        Pokemon pokemonApparu = apparitionPokemon(lesPokemons, pokemonJoueur.niveau);
+        clearScreen();
+        println("Un " + pokemonApparu.Nom + " est apparu !");
 
 
     //debut combat
-    while (pokemonApparu.PV > 0 && pokemonJoueur.PV > 0){
-        int degats;
-        phraseAttaque(idxTour, pokemonJoueur.Nom, pokemonApparu.Nom);
+        while (pokemonApparu.PV > 0 && pokemonJoueur.PV > 0){
+            int degats;
+            phraseAttaque(idxTour, pokemonJoueur.Nom, pokemonApparu.Nom);
 
         //attaque de l'utilisateur
 
-        println("1. "+ attaquesDispo[0] + "\n" + "2. " + attaquesDispo[1] + "\n"+ "3. " +attaquesDispo[2] + "\n" + "4. " +attaquesDispo[3]);
-        String attaqueLancee = choixAttaque(readString(),attaquesDispo);
-        clearScreen();
-        cursor(16,4);
-        println(pokemonJoueur.Nom + " attaque " + attaqueLancee + "!");
-        delay(800);
-        clearScreen();
-        degats = calculDegats(attaqueLancee, pokemonApparu, pokemonJoueur);
+            println("1. "+ attaquesDispo[0] + "\n" + "2. " + attaquesDispo[1] + "\n"+ "3. " +attaquesDispo[2] + "\n" + "4. " +attaquesDispo[3]);
+                String attaqueLancee = choixAttaque(readString(),attaquesDispo);
+                clearScreen();
+                cursor(16,4);
+                println(pokemonJoueur.Nom + " attaque " + attaqueLancee + "!");
+                delay(800);
+                clearScreen();
+                degats = calculDegats(attaqueLancee, pokemonApparu, pokemonJoueur);
 
         // perte de PVs
-        pokemonApparu.PV = (int) (pokemonApparu.PV-degats);
-        
+                pokemonApparu.PV = (int) (pokemonApparu.PV-degats);
+                println("check3");
         //riposte de l'ennemi
-        if(pokemonApparu.PV > 0){
-        
-        }
+                if(pokemonApparu.PV > 0){
+        println("check4");
+                }
         //fin combat quand l'ennemi ou le joueur n'a plus de PV
         //gain d'exp
-       
-    }
+                println("check1");
+            }
     //idxTour=idxTour+1;
-    xp = xp + 200;
-    if(xp==1000){
-        pokemonJoueur.niveau=pokemonJoueur.niveau+1;
-        println("Bravo ton pokemon est monté d'un niveau");
-    }
-    DebutDeJeu();
+            println("check2");
+            xp = xp + 200;
+            if(xp==1000){
+                pokemonJoueur.niveau=pokemonJoueur.niveau+1;
+                println("Bravo ton pokemon est montÃ© d'un niveau");
+            }
+            println("Voulez vous continuez? \n 1. oui \n 2. non");
+            String continuer=readString();
+            while(!continuer.equals("oui") && !continuer.equals("non")){
+            println("Mettre oui ou non");
+            delay(2000);
+            continuer= readString();
+            }
+            if(continuer.equals("non")){
+                findecombat=true;
+            }
+        }
+    
   }
   void algorithm(){
       DebutDeJeu();
