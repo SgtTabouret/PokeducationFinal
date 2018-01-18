@@ -1,6 +1,6 @@
 import extensions.CSVFile;
 class Pokeducation extends Program{
-  String cheminCSV = "C:\\Users\\jules\\Desktop\\Pokeducation\\src\\pokeducation\\PokeducationFinal\\";
+  String cheminCSV = "C:\\Users\\Flann\\Documents\\NetBeansProjects\\Pokeducation\\src\\Pokeducation\\";
   void algorithm(){
     boolean findeJeu=true;
     Jeu(findeJeu);
@@ -12,6 +12,9 @@ class Pokeducation extends Program{
       if (choisi==1){
         choixMenuSauvegarde();
         finJeu=false;
+      }
+      else if (choisi==2){
+          
       }
       else if (choisi==3){
           finJeu=false;
@@ -39,6 +42,16 @@ class Pokeducation extends Program{
       choix = menuprincipal();
     }
     return stringToInt(choix);
+  }
+  void MenuAide(){
+   decoMenu();
+   cursor(4,35);
+   println("WORK  IN PROFRESS");
+   cursor(6,35);
+   println("Appuyez sur entrée pour sortir");
+   readString();
+   Jeu(true);
+           
   }
   String menuprincipal(){
       decoMenu();
@@ -214,6 +227,7 @@ class Pokeducation extends Program{
     //fonction qui permet a un certain niveau dapprendre au Quipokemon une nouvelle attaque a la place d'une autre
     println("Ton pokemon peut apprendre l'attaque Pistolet(Technologie) \n veut tu lui apprendre?\n oui \n non");
     String nouvelleattaque=readString();
+    //controle de saisie (force l'utilisateur a entrer oui OU non)
     while(!nouvelleattaque.equals("oui") && !nouvelleattaque.equals("non")){
         println("Mettre oui ou non");
         delay(2000);
@@ -229,7 +243,7 @@ class Pokeducation extends Program{
         }
         int choixattaque=stringToInt(attaquechoisi);
         choixattaque = choixattaque - 1;
-        attaquesDispo[choixattaque]="Pistolet (Technologie";
+        attaquesDispo[choixattaque]="Pistolet (Technologie)";
     }
     return attaquesDispo;
                         
