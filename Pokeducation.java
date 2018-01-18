@@ -211,6 +211,7 @@ class Pokeducation extends Program{
       return true;
   }
   String[] nouvelleattaque(String[]attaquesDispo){
+    //fonction qui permet a un certain niveau dapprendre au Quipokemon une nouvelle attaque a la place d'une autre
     println("Ton pokemon peut apprendre l'attaque Pistolet(Technologie) \n veut tu lui apprendre?\n oui \n non");
     String nouvelleattaque=readString();
     while(!nouvelleattaque.equals("oui") && !nouvelleattaque.equals("non")){
